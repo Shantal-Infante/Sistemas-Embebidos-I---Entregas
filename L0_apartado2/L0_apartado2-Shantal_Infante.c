@@ -1,5 +1,5 @@
-//#include "static_stack.h"
-#include "dinamic_stack.h"
+#include "static_stack.h"
+//#include "dinamic_stack.h"
 // los demás include serán agregados al importar la libreria de la pila estatica
 // o la de la dinamica
 
@@ -39,11 +39,11 @@ int main() {
     item6.referencia = 0x06;
 
     // Creamos la pila estática (tiene espacio para maximo 100 items)
-    //Static_Stack pila;
-    // O Creamos la pila dinámica, descomentar lineas siguientes y comentar la de arriba
-    Dinamic_Stack pila;
+    Static_Stack pila;
+    // O Creamos la pila dinámica, descomentar 2 lineas siguientes y comentar la de arriba
+    //Dinamic_Stack pila;
     crear(&pila, 6); // estatica o dinamica
-    int MAX_ELEMENTOS = pila.tamano_max;
+   // int MAX_ELEMENTOS = pila.tamano_max;
 
     // cargamos a la pila los items de prueba
     push(&pila, item1);
@@ -61,6 +61,7 @@ int main() {
     for (int i = 0; i < N; i++) {
         items[i] = pop(&pila);
     }
+    //liberar(&pila); ///////// Comentar linea si es pila estatica ////////////
 
     // Llamamos la función para procesar las interrupciones
     procesar_interrupcion(items, N, MAX_ELEMENTOS);

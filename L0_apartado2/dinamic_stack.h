@@ -1,4 +1,4 @@
-// Pila estática
+// Pila Dinamica
 
 #include <stdlib.h>
 #include "item.h"
@@ -27,6 +27,7 @@ Dinamic_Stack crear(Dinamic_Stack *pila, int nro_elementos)
     pila->cima = 0;
     pila->tamano = 0;
     pila->tamano_max = nro_elementos;
+    pila->elementos = reservado;
     return *pila;
 }
 
@@ -102,5 +103,11 @@ Item pop(Dinamic_Stack *pila)
 int conteo(Dinamic_Stack pila)
 {
     return pila.tamano;
+}
+
+void liberar(Dinamic_Stack *pila) 
+{
+    free(pila->elementos);
+    pila->elementos = NULL;
 }
 
