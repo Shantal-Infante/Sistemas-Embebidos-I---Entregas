@@ -1,7 +1,16 @@
-#include "static_stack.h"
-//#include "dinamic_stack.h"
+#include "static_stack.c"
+//#include "dinamic_stack.c"
 // los demás include serán agregados al importar la libreria de la pila estatica
 // o la de la dinamica
+
+typedef enum {
+    TOGGLE_PIN1 = 0x00,
+    IMPRIME_PIN1 = 0x01,
+    INCREMENTA_CONTADOR = 0x02,
+    IMPRIME_CONTADOR = 0x03,
+    NRO_ITEMS = 0x05,
+    PILA_LLENA = 0x06,
+} Instrucciones;
 
 int procesar_interrupcion(Item *items, int N, int nro_max_de_elementos);
 
@@ -53,11 +62,9 @@ int main() {
     push(&pila, item5); 
     push(&pila, item6); 
 
-    //deberia haber un contador de items???
-
     // creamos el arreglo de items popped
     int N = conteo(pila);
-    Item items[N]; 
+    Item *items = (Item *)malloc(N*sizeof(Item));
     for (int i = 0; i < N; i++) {
         items[i] = pop(&pila);
     }
@@ -69,32 +76,33 @@ int main() {
     return 0;
 }
 
+
 // Definición de la función de interrupciones
 int procesar_interrupcion(Item *items, int N, int nro_max_de_elementos) 
-{
+{/////////////// USAR ENUM EN VEZ DEL SWITCH CASE ////////////
     int pin1 = 0;
     size_t j = 0;
     for (int i = 0; i < N; i++) 
     {
-        switch (items[i].Pin_entrada) {
-            case 0x00: // Hacer Toggle del Pin 1
+        switch ((Instrucciones)items[i].Pin_entrada) {
+            case TOGGLE_PIN1: // Hacer Toggle del Pin 1
                 printf("\nse hizo Toggle del pin 1 exitosamente");
                 pin1 = !pin1;
                 break;
-            case 0x01: // Imprimir el valor del pin 1
+            case IMPRIME_PIN1: // Imprimir el valor del pin 1
                 printf("\nPin 1: %d", pin1);
                 break;
-            case 0x02: // Aumentar un contador de tipo size_t
+            case INCREMENTA_CONTADOR: // Aumentar un contador de tipo size_t
                 printf("\nSe incremento el contador exitosamente");
                 j++;
                 break;
-            case 0x03: // Imprimir el contador
+            case IMPRIME_CONTADOR: // Imprimir el contador
                 printf("\nContador: %zu", j);
                 break;
-            case 0x05: // Verificar el número de items que hay en la Pila
+            case NRO_ITEMS: // Verificar el número de items que hay en la Pila
                 printf("\nNumero de items: %d", N);
                 break; 
-            case 0x06: // Si la Pila está llena finaliza la ejecución del programa
+            case PILA_LLENA: // Si la Pila está llena finaliza la ejecución del programa
                 if(N == nro_max_de_elementos)
                 {
                     printf("\nLa pila se lleno, finalizando el programa...\n");

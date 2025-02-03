@@ -12,6 +12,8 @@ typedef struct
     uint16_t checksum;       // [bytes posiciones 10-11] (sin signo)
 } Mediciones;
 
+///////////////USAR UNION /////////////////////////////////////////
+
 // Prototipo de la Funcion a implementar
 Mediciones ordenar_mediciones(uint8_t data_a_ordenar[]);
 int leer_entrada(uint8_t entrada[]);
@@ -67,6 +69,10 @@ int leer_entrada(uint8_t entrada[])
 // la funcion devolverá el tipo de dato definido 
 Mediciones ordenar_mediciones(uint8_t data_a_ordenar[]) 
 {
+    ///// lA UNION EVITA EL SHIFTEO ////////////////
+    ////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+
     Mediciones mediciones_ordenadas; // Creo una variable del tipo de dato que definí
 
     // Se asignan las partes del array con la data a los campos respectivos

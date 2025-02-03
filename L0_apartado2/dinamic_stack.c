@@ -1,30 +1,37 @@
-// Pila estática
+// Pila Dinamica
 
 #include <stdlib.h>
 #include "item.h"
 
-#define MAX_ELEMENTOS 100
-
 typedef struct
 {
     int tamano; //nro de elementos en la pila actualmente
+    int tamano_max; //tamano maximo de la pila para saber si esta llena
     int cima;   
-    Item elementos[MAX_ELEMENTOS]; // usamos un arreglo de tamaño fijo
-}Static_Stack;
+    Item *elementos; // usamos un puntero
+}Dinamic_Stack;
 
 // Funciones de la pila
 
-Static_Stack crear(Static_Stack *pila, int nro_elementos) 
-{ 
-    /* Nota: en realidad el int nro_elementos no se uso pero se agrego para que 
-       esta funcion sea igual a la forma en que se define en dinamic_stack.h
-       y reutilizar codigo en la funcion main*/
+Dinamic_Stack crear(Dinamic_Stack *pila, int nro_elementos) 
+{
+    // reservamos el bloque de memoria del tamaño adecuado para nuestra pila
+    Item *reservado;
+    reservado = (Item *)malloc(sizeof(Item)*nro_elementos);
+    if(reservado == NULL)
+    {
+        //verificamos
+        printf("\nError al reservar memoria\n");
+        exit(1);
+    }
     pila->cima = 0;
     pila->tamano = 0;
+    pila->tamano_max = nro_elementos;
+    pila->elementos = reservado;
     return *pila;
 }
 
-int esta_vacia(Static_Stack pila)
+int esta_vacia(Dinamic_Stack pila)
 {
     
     if(pila.tamano == 0)
@@ -37,9 +44,9 @@ int esta_vacia(Static_Stack pila)
     }
 }
 
-int esta_llena(Static_Stack pila)
+int esta_llena(Dinamic_Stack pila)
 {
-    if(pila.tamano == MAX_ELEMENTOS)
+    if(pila.tamano == pila.tamano_max)
     { 
         return 1; // está llena
     }
@@ -49,29 +56,23 @@ int esta_llena(Static_Stack pila)
     }
 }
 
-int push(Static_Stack *pila, Item nuevo_elemento)
+int push(Dinamic_Stack *pila, Item nuevo_elemento)
 {
-    if(pila->tamano < MAX_ELEMENTOS) 
+    if(pila->tamano < pila->tamano_max) 
     {
         pila->elementos[pila->cima] = nuevo_elemento;
         pila->cima++;
         pila->tamano++;
         return 1; // elemento agregado exitosamente
     }
-    else //La pila esta llena, hay que desplazar los items
-    {                         
-        for(int i = 0; i < (MAX_ELEMENTOS- 1); i++)
-        {   
-            pila->elementos[i] = pila->elementos[i+1];
-        } 
-        // agregamos el nuevo elemento en la cima
-        pila->elementos[MAX_ELEMENTOS-1] = nuevo_elemento;
-        return 1; // elemento agregado exitosamente
-        //el índice de la cima y el tamaño no cambian porque la pila sigue llena
+    else 
+    {   
+        printf("Overflow");
+        exit(1);
     }
 }
 
-Item pop(Static_Stack *pila)
+Item pop(Dinamic_Stack *pila)
 {
     Item elemento_retirado;
     elemento_retirado.Pin_entrada = 0;
@@ -93,8 +94,14 @@ Item pop(Static_Stack *pila)
     }
 }
 
-int conteo(Static_Stack pila)
+int conteo(Dinamic_Stack pila)
 {
     return pila.tamano;
+}
+
+void liberar(Dinamic_Stack *pila) 
+{
+    free(pila->elementos);
+    pila->elementos = NULL;
 }
 
